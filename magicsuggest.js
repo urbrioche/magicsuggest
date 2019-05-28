@@ -827,8 +827,8 @@
                             beforeSend: cfg.beforeSend,
                             success: function(asyncData){
                                 json = typeof(asyncData) === 'string' ? JSON.parse(asyncData) : asyncData;
-                                self._processSuggestions(json);
                                 $(ms).trigger('load', [ms, json]);
+                                self._processSuggestions(json);
                                 if(self._asyncValues){
                                     ms.setValue(typeof(self._asyncValues) === 'string' ? JSON.parse(self._asyncValues) : self._asyncValues);
                                     self._renderSelection();
