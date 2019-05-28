@@ -1,0 +1,31 @@
+{
+  "name": "magicsuggest",
+  "version": "1.0.0",
+  "description": "Looking for maintainers\r -----------------------\r Please see: https://github.com/nicolasbize/magicsuggest/issues/307",
+  "main": "magicsuggest.js",
+  "scripts": {
+    "test": "jest --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/urbrioche/magicsuggest.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/urbrioche/magicsuggest/issues"
+  },
+  "homepage": "https://github.com/urbrioche/magicsuggest#readme",
+  "devDependencies": {
+    "@babel/core": "^7.4.5",
+    "@babel/node": "^7.4.5",
+    "@babel/plugin-proposal-class-properties": "^7.4.4",
+    "@babel/preset-env": "^7.4.5",
+    "@babel/register": "^7.4.4",
+    "jest": "^24.8.0"
+  },
+  "dependencies": {
+    "jquery": "^3.4.1"
+  }
+}
