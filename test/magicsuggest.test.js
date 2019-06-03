@@ -193,11 +193,69 @@ describe('Magic Suggest addToSelection', () => {
 
         const ms = $('#city').magicSuggest();
         //id is treated as valueField by default
-        ms.addToSelection([{id:'2'}, {id:'4'}])
-        console.log(ms.getValue());
+        ms.addToSelection([{id: '2'}, {id: '4'}])
+        //console.log(ms.getValue());
         const expected = ['Tainan', 'Taipei', 'Kaohsiung', '2', '4'];
 
         expect(ms.getValue()).toEqual(expected);
+    });
+
+});
+
+
+describe('Magic Suggest Method', () => {
+
+    it('init with default options, after calling clear, getValue should return empty array', () => {
+        document.body.innerHTML = `
+        <input id="city" value='["Tainan","Taipei", "Kaohsiung"]' />
+        `;
+        const ms = $('#city').magicSuggest();
+        //console.log(ms.getValue());
+        //before clear
+        expect(ms.getValue().length).toBe(3);
+        ms.clear();
+        // console.log(ms.getValue());
+        //after clear
+        expect(ms.getValue()).toEqual([]);
+    });
+
+    it('init ms with expanded is true, after calling collapse, the combobox should not be found', () => {
+        document.body.innerHTML = `
+        <input id="city" />
+        `;
+        const ms = $('#city').magicSuggest({
+            data: ['Taipei', 'Taichung', 'Kaohsiung'],
+            expanded: true
+        });
+
+        //expand, combobox can be found.
+        expect(ms.container.find(ms.combobox).length).toBe(1);
+        //console.log(ms.combobox.prop('outerHTML'));
+        ms.collapse();
+        //console.log(ms.container.find(ms.combobox));
+        //collapse, combobox cannot be found
+        expect(ms.container.find(ms.combobox).length).toBe(0);
+    });
+
+    it('when disable() is called, ms-ctn-disabled class should be added', () => {
+        document.body.innerHTML = `
+        <input id="city" />
+        `;
+        const ms = $('#city').magicSuggest();
+        expect($('#city').hasClass('ms-ctn-disabled')).toBeFalsy();
+        ms.disable();
+        expect($('#city').hasClass('ms-ctn-disabled')).toBeTruthy();
+    });
+
+    it('when empty() is called, input value should be clear', () => {
+        document.body.innerHTML = `
+        <input id="city" />
+        `;
+        const ms = $('#city').magicSuggest();
+        ms.input.val('a');
+        expect(ms.getRawValue()).toBe('a');
+        ms.empty();
+        expect(ms.getRawValue()).toBe('');
     });
 
 });
