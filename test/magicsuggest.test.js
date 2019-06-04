@@ -203,7 +203,7 @@ describe('Magic Suggest addToSelection', () => {
 });
 
 
-describe('Magic Suggest Method', () => {
+describe('Magic Suggest Other Method', () => {
 
     it('init with default options, after calling clear, getValue should return empty array', () => {
         document.body.innerHTML = `
@@ -256,6 +256,51 @@ describe('Magic Suggest Method', () => {
         expect(ms.getRawValue()).toBe('a');
         ms.empty();
         expect(ms.getRawValue()).toBe('');
+    });
+
+    it('when enable() is called, the container should not have ms-ctn-disabled class', () => {
+        document.body.innerHTML = `
+        <input id="city" />
+        `;
+        const ms = $('#city').magicSuggest({
+            disabled: true
+        });
+        const disabledClassName = 'ms-ctn-disabled';
+        //before enable
+        expect($('#city').hasClass(disabledClassName)).toBeTruthy();
+        expect($('#city input').prop('disabled')).toBeTruthy();
+        //after enable
+        ms.enable();
+        expect($('#city').hasClass(disabledClassName)).toBeFalsy();
+        expect($('#city input').prop('disabled')).toBeFalsy();
+    });
+
+    it('when expand() is called, the container should have combobox', () => {
+        document.body.innerHTML = `
+        <input id="city" />
+        `;
+        const ms = $('#city').magicSuggest({
+            data: ['Taipei', 'Taichung', 'Kaohsiung']
+        });
+
+        //collapse, combobox cannot be found
+        expect(ms.container.find(ms.combobox).length).toBe(0);
+        //expand, combobox can be found.
+        ms.expand();
+        expect(ms.container.find(ms.combobox).length).toBe(1);
+        //console.log(ms.combobox.prop('outerHTML'));
+    });
+
+    it('init ms with disabled is true, isDisabled() should also be true', () => {
+        document.body.innerHTML = `
+        <input id="city" />
+        `;
+        const ms = $('#city').magicSuggest({
+            data: ['Taipei', 'Taichung', 'Kaohsiung'],
+            disabled: true
+        });
+
+        expect(ms.isDisabled()).toBeTruthy();
     });
 
 });
