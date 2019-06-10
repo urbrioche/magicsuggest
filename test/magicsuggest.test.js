@@ -303,4 +303,86 @@ describe('Magic Suggest Other Method', () => {
         expect(ms.isDisabled()).toBeTruthy();
     });
 
+    it('validate email vtype is valid', () => {
+        document.body.innerHTML = `
+        <input id="email" value='["hello@gmail.com"]'/>
+        `;
+        const ms = $('#email').magicSuggest({
+            vtype: 'email',
+        });
+        expect(ms.isValid()).toBeTruthy();
+    });
+
+    it('validate email vtype is invalid', () => {
+        // lock of @ in email address
+        document.body.innerHTML = `
+        <input id="email" value='["hellogmail.com"]'/>
+        `;
+        const ms = $('#email').magicSuggest({
+            vtype: 'email',
+        });
+        expect(ms.isValid()).toBeFalsy();
+    });
+
+    it('validate value by given vregex (regular expression) should be true', () => {
+        document.body.innerHTML = `
+        <input id="city" value='["taipei"]'/>
+        `;
+        const ms = $('#city').magicSuggest({
+            vregex: /^[a-z]{1,6}$/,
+        });
+        expect(ms.isValid()).toBeTruthy();
+    });
+
+    it('validate value by given vregex (regular expression) should be false', () => {
+        document.body.innerHTML = `
+        <input id="city" value='["Taipei"]'/>
+        `;
+        const ms = $('#city').magicSuggest({
+            vregex: /^[a-z]{1,5}$/,
+        });
+        expect(ms.isValid()).toBeFalsy();
+    });
+
+    it('getDataUrlParams', () => {
+        document.body.innerHTML = `
+        <input id="city" />
+        `;
+        const ms = $('#city').magicSuggest({
+            dataUrlParams: {id: 3}
+        });
+        expect(ms.getDataUrlParams().id).toBe(3);
+    });
+
+    it('when name is given with [], getName should return []', () => {
+        document.body.innerHTML = `
+        <input id="city" />
+        `;
+        const ms = $('#city').magicSuggest({
+            name: 'cities[]'
+        });
+        expect(ms.getName()).toBe('cities[]');
+    });
+
+    it('when name is not given with [], getName should also return []', () => {
+        document.body.innerHTML = `
+        <input id="city" />
+        `;
+        const ms = $('#city').magicSuggest({
+            name: 'cities'
+        });
+        expect(ms.getName()).toBe('cities[]');
+    });
+
+    it('getSelection() returns an array of selected JSON objects', () => {
+        document.body.innerHTML = `
+        <input id="city" />
+        `;
+        const ms = $('#city').magicSuggest({
+            value: [{ id: 1, city: 'Taipei' },{ id: 2, city: 'Taichung'}]
+        });
+        expect(ms.getSelection()).toEqual([{ id: 1, city: 'Taipei' },{ id: 2, city: 'Taichung'}]);
+    });
+
+
 });
