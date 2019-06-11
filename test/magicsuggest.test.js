@@ -379,9 +379,76 @@ describe('Magic Suggest Other Method', () => {
         <input id="city" />
         `;
         const ms = $('#city').magicSuggest({
-            value: [{ id: 1, city: 'Taipei' },{ id: 2, city: 'Taichung'}]
+            value: [{id: 1, city: 'Taipei'}, {id: 2, city: 'Taichung'}]
         });
-        expect(ms.getSelection()).toEqual([{ id: 1, city: 'Taipei' },{ id: 2, city: 'Taichung'}]);
+        expect(ms.getSelection()).toEqual([{id: 1, city: 'Taipei'}, {id: 2, city: 'Taichung'}]);
+    });
+
+    it('getRawValue() returns the current text being entered by the user.', () => {
+        document.body.innerHTML = `
+        <input id="city" />
+        `;
+        const ms = $('#city').magicSuggest();
+        $('#city input').val('Hello Taipei!');
+        expect(ms.getRawValue()).toEqual('Hello Taipei!');
+    });
+
+    it('removeFromSelection([object] objs, [boolean] silent) removes items from the selection.', () => {
+        document.body.innerHTML = `
+        <input id="city" value='[{ "id":1, "name": "Taipei" },{ "id":2, "name": "Taichung" }]' />
+        `;
+        const ms = $('#city').magicSuggest({
+            valueField: 'id'
+        });
+        ms.removeFromSelection([{"id": 1, "name": "Taipei"}]);
+        expect(ms.getValue()).toEqual([2]);
+    });
+
+    it('setData([array] cbItems) sets the objects listed in the combo.', () => {
+        document.body.innerHTML = `
+        <input id="city" value='[{ "id":1, "name": "Taipei" },{ "id":2, "name": "Taichung" }]' />
+        `;
+        const ms = $('#city').magicSuggest({
+            valueField: 'id'
+        });
+        ms.setData([{'id': 3, 'name': 'Kaohsiung'}]);
+        expect(ms.getData()).toEqual([{id: 3, name: 'Kaohsiung'}]);
+    });
+
+    it('setName([string] name) sets the name to be used for form submission.', () => {
+        document.body.innerHTML = `
+        <input id="city" />
+        `;
+        const ms = $('#city').magicSuggest();
+        ms.setName('cities');
+        expect(ms.getName()).toEqual('cities[]');
+    });
+
+    it('setSelection(object[]) sets the selection with a given array of objects.', () => {
+        document.body.innerHTML = `
+        <input id="city" />
+        `;
+        const ms = $('#city').magicSuggest();
+        ms.setSelection([{id: 1, name: 'Taipei'}, {id: 2, name: 'Taichung'}]);
+        expect(ms.getSelection()).toEqual([{id: 1, name: 'Taipei'}, {id: 2, name: 'Taichung'}]);
+    });
+
+    it('setValue([array] ids) sets the selection according to given values.', () => {
+        document.body.innerHTML = `
+        <input id="city" />
+        `;
+        const ms = $('#city').magicSuggest();
+        ms.setValue([{id: 1, name: 'Taipei'}, {id: 2, name: 'Taichung'}]);
+        expect(ms.getValue()).toEqual([1, 2]);
+    });
+
+    it('setDataUrlParams([object] params) sets extra parameters for AJAX requests.', () => {
+        document.body.innerHTML = `
+        <input id="city" />
+        `;
+        const ms = $('#city').magicSuggest();
+        ms.setDataUrlParams({id:3});
+        expect(ms.getDataUrlParams()).toEqual({id:3});
     });
 
 
