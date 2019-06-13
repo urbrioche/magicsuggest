@@ -447,9 +447,52 @@ describe('Magic Suggest Other Method', () => {
         <input id="city" />
         `;
         const ms = $('#city').magicSuggest();
-        ms.setDataUrlParams({id:3});
-        expect(ms.getDataUrlParams()).toEqual({id:3});
+        ms.setDataUrlParams({id: 3});
+        expect(ms.getDataUrlParams()).toEqual({id: 3});
+    });
+});
+
+describe('Magic Suggest Event', () => {
+    it('beforeload(e, this) is fired before the AJAX request is performed', () => {
+        $.ajax = jest.fn().mockImplementation();
+
+        document.body.innerHTML = `
+        <input id="city" />
+        `;
+        const ms = $('#city').magicSuggest({
+            data: 'api/get_city'
+        });
+
+        const mockFn = jest.fn();
+        $(ms).on('beforeload', () => {
+            mockFn();
+            //console.log('Hello');
+        });
+
+        //in order to trigger ajax call
+        ms.expand();
+
+        expect(mockFn).toHaveBeenCalled();
     });
 
+    it('blur(e, this) is fired when the component looses focus.', () => {
+        document.body.innerHTML = `
+        <input id="city" />
+        `;
+        const ms = $('#city').magicSuggest({
+            data: 'api/get_city'
+        });
+
+        const mockFn = jest.fn();
+        $(ms).on('blur', () => {
+            mockFn();
+        });
+
+        ms.input.focus();
+        expect(mockFn).not.toHaveBeenCalled();
+        //to simulate the component looses focus
+        $('body').click();
+        expect(mockFn).toHaveBeenCalled();
+    });
 
 });
