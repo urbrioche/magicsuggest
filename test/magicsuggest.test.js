@@ -479,9 +479,7 @@ describe('Magic Suggest Event', () => {
         document.body.innerHTML = `
         <input id="city" />
         `;
-        const ms = $('#city').magicSuggest({
-            data: 'api/get_city'
-        });
+        const ms = $('#city').magicSuggest({});
 
         const mockFn = jest.fn();
         $(ms).on('blur', () => {
@@ -492,6 +490,155 @@ describe('Magic Suggest Event', () => {
         expect(mockFn).not.toHaveBeenCalled();
         //to simulate the component looses focus
         $('body').click();
+        expect(mockFn).toHaveBeenCalled();
+    });
+
+    it('collapse(e, this) is fired when the combo is collapsed.', () => {
+        document.body.innerHTML = `
+        <input id="city" />
+        `;
+        const ms = $('#city').magicSuggest({});
+
+        const mockFn = jest.fn();
+        $(ms).on('collapse', () => {
+            mockFn();
+        });
+
+        ms.expand();
+        expect(mockFn).not.toHaveBeenCalled();
+        ms.collapse();
+        expect(mockFn).toHaveBeenCalled();
+    });
+
+    it('expand(e, this) is fired when the combo is expanded.', () => {
+        document.body.innerHTML = `
+        <input id="city" />
+        `;
+        const ms = $('#city').magicSuggest({});
+
+        const mockFn = jest.fn();
+        $(ms).on('expand', () => {
+            mockFn();
+        });
+
+        expect(mockFn).not.toHaveBeenCalled();
+        ms.expand();
+        expect(mockFn).toHaveBeenCalled();
+    });
+
+    it('focus(e, this) is fired when the combo gains focus.', () => {
+        document.body.innerHTML = `
+        <input id="city" />
+        `;
+        const ms = $('#city').magicSuggest({});
+
+        const mockFn = jest.fn();
+        $(ms).on('focus', () => {
+            mockFn();
+        });
+
+        expect(mockFn).not.toHaveBeenCalled();
+        $(ms).focus();
+        expect(mockFn).toHaveBeenCalled();
+    });
+
+    it('keydown(e, this, keyevent) is fired when the user presses a key', () => {
+        document.body.innerHTML = `
+        <input id="city" />
+        `;
+        const ms = $('#city').magicSuggest({});
+
+        const mockFn = jest.fn();
+        $(ms).on('keydown', () => {
+            mockFn();
+        });
+
+        expect(mockFn).not.toHaveBeenCalled();
+        $(ms).keydown();
+        expect(mockFn).toHaveBeenCalled();
+    });
+
+    it('keyup(e, this, keyevent) is fired when the user releases a key.', () => {
+        document.body.innerHTML = `
+        <input id="city" />
+        `;
+        const ms = $('#city').magicSuggest({});
+
+        const mockFn = jest.fn();
+        $(ms).on('keyup', () => {
+            mockFn();
+        });
+
+        expect(mockFn).not.toHaveBeenCalled();
+        $(ms).keyup();
+        expect(mockFn).toHaveBeenCalled();
+    });
+
+    it('load(e, this, records[]) is fired when the AJAX request has been performed', () => {
+        document.body.innerHTML = `
+        <input id="city" />
+        `;
+        const ms = $('#city').magicSuggest({
+            data: 'api/get_city'
+        });
+
+        //http://blog.404mzk.com/jest.html
+        //我不想用[0][0]
+        //$.ajax.mock.calls[0][0].success([1])
+
+        //靈感來自下面的網址，但是，他是用jasmine
+        //https://stackoverflow.com/questions/21267250/how-do-you-spy-on-a-call-back-in-an-ajax-call-with-jasmine
+        $.ajax = jest.fn().mockImplementation((param) => {
+            param.success([
+                {id: 1, name: 'Tainan'},
+                {id: 2, name: 'Taipei'},
+                {id: 3, name: 'Kaohsiung'}
+            ]);
+        });
+
+
+        const mockFn = jest.fn();
+        $(ms).on('load', () => {
+            mockFn();
+        });
+
+        expect(mockFn).not.toHaveBeenCalled();
+        //in order to trigger ajax call
+        ms.expand();
+        expect(mockFn).toHaveBeenCalled();
+    });
+
+    it('selectionchange(e, this, records[]) is fired when the user has changed the selection.', () => {
+        document.body.innerHTML = `
+        <input id="city" />
+        `;
+        const ms = $('#city').magicSuggest({});
+
+        const mockFn = jest.fn();
+        $(ms).on('selectionchange', () => {
+            mockFn();
+        });
+
+        expect(mockFn).not.toHaveBeenCalled();
+        //to simulate selection change
+        ms.setSelection([1, 2, 3]);
+        expect(mockFn).toHaveBeenCalled();
+    });
+
+    it('triggerclick(e, this) is fired when the user has changed the selection.', () => {
+        document.body.innerHTML = `
+        <input id="city" />
+        `;
+        const ms = $('#city').magicSuggest({});
+
+        const mockFn = jest.fn();
+        $(ms).on('triggerclick', () => {
+            mockFn();
+        });
+
+        expect(mockFn).not.toHaveBeenCalled();
+        //simulate click the combo
+        $('#city .ms-trigger').click();
         expect(mockFn).toHaveBeenCalled();
     });
 
