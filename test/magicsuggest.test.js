@@ -643,3 +643,36 @@ describe('Magic Suggest Event', () => {
     });
 
 });
+
+describe('Magic Suggest Configuration', () => {
+    it('allowFreeEntries set as true will allow the user to enter non-suggested entries.', () => {
+        document.body.innerHTML = `
+        <input id="city" />
+        `;
+        const ms = $('#city').magicSuggest({
+            allowFreeEntries: true,
+            data: ['Taipei', 'Tainan']
+        });
+        $(ms.input).val('Chiayi');
+        //simulate press enter key
+        $(ms.input).trigger($.Event("keyup", {keyCode: 13}));
+        expect(ms.getValue()).toEqual(['Chiayi']);
+        //console.log(ms.getValue());
+    });
+
+    it('allowFreeEntries set as false will not allow the user to enter non-suggested entries.', () => {
+        document.body.innerHTML = `
+        <input id="city" />
+        `;
+        const ms = $('#city').magicSuggest({
+            allowFreeEntries: false,
+            data: ['Taipei', 'Tainan']
+        });
+        $(ms.input).val('Chiayi');
+        //ms.expand();
+        $(ms.input).trigger($.Event("keyup", {keyCode: 13}));
+        expect(ms.getValue()).toEqual([]);
+    });
+
+
+});
