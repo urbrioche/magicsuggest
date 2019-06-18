@@ -670,8 +670,61 @@ describe('Magic Suggest Configuration', () => {
         });
         $(ms.input).val('Chiayi');
         //ms.expand();
+        //simulate press enter key
         $(ms.input).trigger($.Event("keyup", {keyCode: 13}));
         expect(ms.getValue()).toEqual([]);
+    });
+
+    it('when allowDuplicates is true, allows the user to reenter the same entry multiple times.', () => {
+        document.body.innerHTML = `
+        <input id="city" />
+        `;
+        const ms = $('#city').magicSuggest({
+            data: ['Taipei', 'Tainan'],
+            allowDuplicates: true
+        });
+        $(ms.input).val('Chiayi');
+        //ms.expand();
+        $(ms.input).trigger($.Event("keyup", {keyCode: 13}));
+        //simulate press enter key
+        $(ms.input).val('Chiayi');
+        $(ms.input).trigger($.Event("keyup", {keyCode: 13}));
+        expect(ms.getValue()).toEqual(['Chiayi', 'Chiayi']);
+    });
+
+    it('ajaxConfig specifies the way ajax calls are made.', () => {
+        document.body.innerHTML = `
+        <input id="city" />
+        `;
+        const ms = $('#city').magicSuggest({
+            data: 'api/get_city',
+            ajaxConfig: {
+                xhrFields: {
+                    withCredentials: true,
+                }
+            }
+        });
+
+        let expectedAjaxConfig = {};
+
+        //http://blog.404mzk.com/jest.html
+        //我不想用[0][0]
+        //$.ajax.mock.calls[0][0].success([1])
+
+        //靈感來自下面的網址，但是，他是用jasmine
+        //https://stackoverflow.com/questions/21267250/how-do-you-spy-on-a-call-back-in-an-ajax-call-with-jasmine
+        $.ajax = jest.fn().mockImplementation((param) => {
+            expectedAjaxConfig = param;
+        });
+
+        //in order to trigger ajax call
+        ms.expand();
+        // console.log(expectedAjaxConfig);
+        expect(expectedAjaxConfig).toMatchObject({
+            xhrFields: {
+                withCredentials: true,
+            }
+        });
     });
 
 
