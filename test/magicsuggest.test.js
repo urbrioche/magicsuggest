@@ -727,5 +727,60 @@ describe('Magic Suggest Configuration', () => {
         });
     });
 
+    it('when autoSelect is false, should NOT automatically selects a result if only one match is found.', () => {
+        document.body.innerHTML = `
+        <input id="city" />
+        `;
+        const ms = $('#city').magicSuggest({
+            data: ['Taipei', 'Taichung', 'Kaohsiung'],
+            autoSelect: false,
+            allowFreeEntries: false,
+        });
+
+        $(ms.input).val('Taip');
+        ms.expand();
+        $(ms.input).trigger($.Event("keyup", {keyCode: 13}));
+        //console.log(ms.getValue());
+        expect(ms.getValue()).toEqual([]);
+    });
+
+    it('when autoSelect is true, should automatically selects a result if only one match is found.', () => {
+        document.body.innerHTML = `
+        <input id="city" />
+        `;
+        const ms = $('#city').magicSuggest({
+            data: ['Taipei', 'Taichung', 'Kaohsiung'],
+            autoSelect: true,
+            allowFreeEntries: false,
+        });
+
+        $(ms.input).val('Taip');
+        ms.expand();
+        $(ms.input).trigger($.Event("keyup", {keyCode: 13}));
+        //console.log(ms.getValue());
+        expect(ms.getValue()).toEqual(['Taipei']);
+    });
+
+    it('beforeSend if a custom jQuery function that is launched prior to the ajax request.', () => {
+        document.body.innerHTML = `
+        <input id="city" />
+        `;
+        const mockedBeforeSend = jest.fn();
+        const ms = $('#city').magicSuggest({
+            data: 'api/get_city',
+            beforeSend: mockedBeforeSend
+        });
+
+        //靈感來自下面的網址，但是，他是用jasmine
+        let expectedAjaxConfig = {};
+        $.ajax = jest.fn().mockImplementation((param) => {
+            expectedAjaxConfig = param;
+        });
+        //in order to trigger ajax call
+        ms.expand();
+
+        expect(expectedAjaxConfig.beforeSend).toEqual(mockedBeforeSend);
+    });
+
 
 });
