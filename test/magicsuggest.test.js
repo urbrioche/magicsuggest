@@ -782,5 +782,39 @@ describe('Magic Suggest Configuration', () => {
         expect(expectedAjaxConfig.beforeSend).toEqual(mockedBeforeSend);
     });
 
+    it('cls specifies an additional CSS class to apply to the container element.', () => {
+        document.body.innerHTML = `
+        <input id="city" />
+        `;
+        const ms = $('#city').magicSuggest({
+            cls: 'custom'
+        });
+        expect($('#city').hasClass('custom')).toBeTruthy();
+    });
 
+    it('disabledField specifies the JSON property that defines the disabled behaviour.', () => {
+        document.body.innerHTML = `
+        <input id="city" />
+        `;
+        const ms = $('#city').magicSuggest({
+            data: [{id: 1, name: 'Taipei', disabled: true}, {id: 2, name: 'Tainan'}],
+            disabledField: 'disabled'
+        });
+
+        ms.expand();
+        expect($(ms.combobox).find('div.ms-res-item-disabled').data('json').name).toBe('Taipei');
+    });
+
+    it('displayField specifies the JSON property to be used for display.', () => {
+        document.body.innerHTML = `
+        <input id="city" />
+        `;
+        const ms = $('#city').magicSuggest({
+            data: [{id: 1, name: 'Taipei'}, {id: 2, name: 'Tainan'}],
+            displayField: 'id',
+        });
+
+        ms.expand();
+        expect($(ms.combobox).find('.ms-res-item').get().map(e => $(e).text())).toEqual(['1', '2']);
+    });
 });
