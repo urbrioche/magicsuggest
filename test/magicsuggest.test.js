@@ -817,4 +817,18 @@ describe('Magic Suggest Configuration', () => {
         ms.expand();
         expect($(ms.combobox).find('.ms-res-item').get().map(e => $(e).text())).toEqual(['1', '2']);
     });
+
+    it('editable enables or prevents keyboard interaction.', () => {
+        document.body.innerHTML = `
+        <input id="city" />
+        `;
+        const ms = $('#city').magicSuggest({
+            data: [{id: 1, name: 'Taipei'}, {id: 2, name: 'Tainan'}],
+            editable: false,
+        });
+
+        expect($(ms.container).hasClass('ms-ctn-readonly')).toBeTruthy();
+        expect($(ms.input).hasClass('ms-input-readonly')).toBeTruthy();
+    });
+
 });
