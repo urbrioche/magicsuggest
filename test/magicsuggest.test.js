@@ -831,4 +831,51 @@ describe('Magic Suggest Configuration', () => {
         expect($(ms.input).hasClass('ms-input-readonly')).toBeTruthy();
     });
 
+    it('expanded sets the starting state for the combo.', () => {
+        document.body.innerHTML = `
+        <input id="city" />
+        `;
+        const ms = $('#city').magicSuggest({
+            data: [{id: 1, name: 'Taipei'}, {id: 2, name: 'Tainan'}],
+            expanded: true
+        });
+
+        expect($(ms.container).find('div.dropdown-menu').length).toBe(1);
+    });
+
+    it('expandOnFocus automatically expands the combo upon focus.', () => {
+        document.body.innerHTML = `
+        <input id="city" />
+        `;
+        const ms = $('#city').magicSuggest({
+            data: [{id: 1, name: 'Taipei'}, {id: 2, name: 'Tainan'}],
+            expandOnFocus: true
+        });
+
+        $(ms.input).focus();
+        expect($(ms.container).find('div.dropdown-menu').length).toBe(1);
+    });
+
+    it('groupBy specifies the JSON property to be used for grouping.', () => {
+        document.body.innerHTML = `
+        <input id="city" />
+        `;
+        const ms = $('#city').magicSuggest({
+            data: [
+                {id: 1, country: 'Taiwan', city: 'Taipei'},
+                {id: 2, country: 'Taiwan', city: 'Tainan'},
+                {id: 3, country: 'United States', city: 'New York'},
+                {id: 4, country: 'United States', city: 'Los Angeles'},
+                ],
+            groupBy: 'country',
+            displayField: 'city',
+        });
+
+        ms.expand();
+        //console.log($(ms.container).find('div.dropdown-menu').html());
+        const firstGroup = $(ms.container).find('div.dropdown-menu div.ms-res-group').eq(0);
+        expect(firstGroup.text()).toBe('Taiwan');
+        expect(firstGroup.next().text()).toBe('Taipei');
+    });
+
 });
