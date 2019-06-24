@@ -866,7 +866,7 @@ describe('Magic Suggest Configuration', () => {
                 {id: 2, country: 'Taiwan', city: 'Tainan'},
                 {id: 3, country: 'United States', city: 'New York'},
                 {id: 4, country: 'United States', city: 'Los Angeles'},
-                ],
+            ],
             groupBy: 'country',
             displayField: 'city',
         });
@@ -877,5 +877,61 @@ describe('Magic Suggest Configuration', () => {
         expect(firstGroup.text()).toBe('Taiwan');
         expect(firstGroup.next().text()).toBe('Taipei');
     });
+
+    it('hideTrigger hides the right trigger.', () => {
+        document.body.innerHTML = `
+        <input id="city" />
+        `;
+        const ms = $('#city').magicSuggest({
+            data: [
+                {id: 1, country: 'Taiwan', city: 'Taipei'},
+                {id: 2, country: 'Taiwan', city: 'Tainan'},
+                {id: 3, country: 'United States', city: 'New York'},
+                {id: 4, country: 'United States', city: 'Los Angeles'},
+            ],
+            hideTrigger: true
+        });
+
+        expect(ms.container.hasClass('ms-no-trigger')).toBeTruthy();
+    });
+
+    it('hideTrigger hides the right trigger.', () => {
+        document.body.innerHTML = `
+        <input id="city" />
+        `;
+        const ms = $('#city').magicSuggest({
+            data: [
+                {id: 1, country: 'Taiwan', city: 'Taipei'},
+                {id: 2, country: 'Taiwan', city: 'Tainan'},
+                {id: 3, country: 'United States', city: 'New York'},
+                {id: 4, country: 'United States', city: 'Los Angeles'},
+            ],
+            highlight: true,
+            displayField: 'city',
+        });
+
+        ms.input.val('Tai');
+        ms.expand();
+        // should find Taipei Tainan
+        expect(ms.container.find('.dropdown-menu em').length).toBe(2);
+    });
+
+    it('id gives the component a specific identifier.', () => {
+        document.body.innerHTML = `
+        <input class="city" />
+        `;
+        const ms = $('.city').magicSuggest({
+            data: [
+                {id: 1, country: 'Taiwan', city: 'Taipei'},
+                {id: 2, country: 'Taiwan', city: 'Tainan'},
+                {id: 3, country: 'United States', city: 'New York'},
+                {id: 4, country: 'United States', city: 'Los Angeles'},
+            ],
+            id: 'my-custom-id'
+        });
+
+        expect($('#my-custom-id').magicSuggest()).toBe(ms);
+    });
+
 
 });
