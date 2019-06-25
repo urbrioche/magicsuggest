@@ -933,5 +933,39 @@ describe('Magic Suggest Configuration', () => {
         expect($('#my-custom-id').magicSuggest()).toBe(ms);
     });
 
+    it('infoMsgCls adds a class to the information text', () => {
+        document.body.innerHTML = `
+        <input id="city" />
+        `;
+        const ms = $('#city').magicSuggest({
+            data: [
+                {id: 1, country: 'Taiwan', city: 'Taipei'},
+                {id: 2, country: 'Taiwan', city: 'Tainan'},
+                {id: 3, country: 'United States', city: 'New York'},
+                {id: 4, country: 'United States', city: 'Los Angeles'},
+            ],
+            infoMsgCls: 'custom'
+        });
+
+        expect(ms.helper.hasClass('custom')).toBeTruthy();
+    });
+
+    it('inputCfg adds properties to the input dom element.', () => {
+        document.body.innerHTML = `
+        <input id="city" />
+        `;
+        const ms = $('#city').magicSuggest({
+            data: [
+                {id: 1, country: 'Taiwan', city: 'Taipei'},
+                {id: 2, country: 'Taiwan', city: 'Tainan'},
+                {id: 3, country: 'United States', city: 'New York'},
+                {id: 4, country: 'United States', city: 'Los Angeles'},
+            ],
+            inputCfg: {"ng-model":"customer.city"}
+        });
+
+        expect(ms.input.attr('ng-model')).toBe('customer.city');
+    });
+
 
 });
