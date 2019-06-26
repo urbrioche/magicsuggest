@@ -961,11 +961,29 @@ describe('Magic Suggest Configuration', () => {
                 {id: 3, country: 'United States', city: 'New York'},
                 {id: 4, country: 'United States', city: 'Los Angeles'},
             ],
-            inputCfg: {"ng-model":"customer.city"}
+            inputCfg: {"ng-model": "customer.city"}
         });
 
         expect(ms.input.attr('ng-model')).toBe('customer.city');
     });
 
+    it('invalidCls specifies the class to be used to style an invalid entry.', () => {
+        document.body.innerHTML = `
+        <input id="city" />
+        `;
+        const ms = $('#city').magicSuggest({
+            data: [
+                {id: 1, country: 'Taiwan', city: 'Taipei'},
+                {id: 2, country: 'Taiwan', city: 'Tainan'},
+                {id: 3, country: 'United States', city: 'New York'},
+                {id: 4, country: 'United States', city: 'Los Angeles'},
+            ],
+            invalidCls: 'custom'
+        });
+
+        ms.isValid = jest.fn().mockReturnValue(false);
+        $(ms.container).trigger('blur');
+        expect(ms.container.hasClass('custom')).toBeTruthy();
+    });
 
 });
