@@ -986,4 +986,29 @@ describe('Magic Suggest Configuration', () => {
         expect(ms.container.hasClass('custom')).toBeTruthy();
     });
 
+    it('matchCase filters data using case sensitivity.', () => {
+        document.body.innerHTML = `
+        <input id="city" />
+        `;
+        const ms = $('#city').magicSuggest({
+            data: [
+                {id: 1, country: 'Taiwan', city: 'Taipei'},
+                {id: 2, country: 'Taiwan', city: 'Tainan'},
+                {id: 3, country: 'United States', city: 'New York'},
+                {id: 4, country: 'United States', city: 'Los Angeles'},
+            ],
+            displayField: 'city',
+            valueField: 'city',
+            matchCase: true
+        });
+
+        ms.input.val('Tai');
+        ms.expand();
+        expect(ms.combobox.find('.ms-res-item').get().map(e => $(e).data('json'))).toMatchObject([
+            {id: 1, country: 'Taiwan', city: 'Taipei'},
+            {id: 2, country: 'Taiwan', city: 'Tainan'},
+        ]);
+    });
+
+
 });
