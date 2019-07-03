@@ -1010,5 +1010,34 @@ describe('Magic Suggest Configuration', () => {
         ]);
     });
 
+    it('maxEntryLength defines the max number of characters for free entries.', () => {
+        document.body.innerHTML = `
+        <input id="city" />
+        `;
+        const ms = $('#city').magicSuggest({
+            maxEntryLength: 5
+        });
+
+        ms.input.val('123456');
+        ms.container.trigger('keyup');
+        expect(ms.helper.html()).toBe('Please reduce your entry by 1 character');
+    });
+
+    it('maxEntryRenderer sets the helper message for entries that are too long.', () => {
+        document.body.innerHTML = `
+        <input id="city" />
+        `;
+        const ms = $('#city').magicSuggest({
+            maxEntryLength: 5,
+            maxEntryRenderer: function(v) {
+                return 'TOO LONG DUMMY!!';
+            }
+        });
+
+        ms.input.val('123456');
+        ms.container.trigger('keyup');
+        expect(ms.helper.html()).toBe('TOO LONG DUMMY!!');
+    });
+
 
 });
