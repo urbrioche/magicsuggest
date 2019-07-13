@@ -1029,7 +1029,7 @@ describe('Magic Suggest Configuration', () => {
         `;
         const ms = $('#city').magicSuggest({
             maxEntryLength: 5,
-            maxEntryRenderer: function(v) {
+            maxEntryRenderer: function (v) {
                 return 'TOO LONG DUMMY!!';
             }
         });
@@ -1037,6 +1037,24 @@ describe('Magic Suggest Configuration', () => {
         ms.input.val('123456');
         ms.container.trigger('keyup');
         expect(ms.helper.html()).toBe('TOO LONG DUMMY!!');
+    });
+
+    it('maxSuggestions defines how many items the combo box can display at once.', () => {
+        document.body.innerHTML = `
+        <input id="city" />
+        `;
+        const ms = $('#city').magicSuggest({
+            data: [
+                {id: 1, country: 'Taiwan', city: 'Taipei'},
+                {id: 2, country: 'Taiwan', city: 'Tainan'},
+                {id: 3, country: 'United States', city: 'New York'},
+                {id: 4, country: 'United States', city: 'Los Angeles'},
+            ],
+            maxSuggestions: 2
+        });
+
+        ms.expand();
+        expect(ms.combobox.find('.ms-res-item').length).toBe(2);
     });
 
 
