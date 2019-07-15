@@ -1057,7 +1057,7 @@ describe('Magic Suggest Configuration', () => {
         expect(ms.combobox.find('.ms-res-item').length).toBe(2);
     });
 
-    it('maxSelection sets the limit of items that can be selected.', () => {
+    it('maxSelection sets the limit of items that can be selected. Should take effect when added one by one', () => {
         document.body.innerHTML = `
         <input id="city" />
         `;
@@ -1075,6 +1075,59 @@ describe('Magic Suggest Configuration', () => {
             {id: 'Tainan'}
         ]);
     });
+
+    it('maxSelection sets the limit of items that can be selected. Should take effect when initial selection count is same as maxSelection', () => {
+        document.body.innerHTML = `
+        <input id="city" />
+        `;
+        const ms = $('#city').magicSuggest({
+            maxSelection: 3
+        });
+
+        //init with 3 items, the same as maxSelection
+        ms.addToSelection([
+            {id: 'Taipei'},
+            {id: 'Taichung'},
+            {id: 'Tainan'}
+        ]);
+
+        ms.addToSelection({id: 'Kaohsiung'});
+        expect(ms.getSelection()).toMatchObject([
+            {id: 'Taipei'},
+            {id: 'Taichung'},
+            {id: 'Tainan'}
+        ]);
+    });
+
+    it('maxSelection sets the limit of items that can be selected. Should not take effect when initial items less than maxSelection-> a bug?', () => {
+        document.body.innerHTML = `
+        <input id="city" />
+        `;
+        const ms = $('#city').magicSuggest({
+            maxSelection: 3
+        });
+
+        //init with 2 items, less than maxSelection
+        ms.addToSelection([
+            {id: 'Taipei'},
+            {id: 'Taichung'},
+        ]);
+
+        // add additional two items
+        ms.addToSelection([
+            {id: 'Tainan'},
+            {id: 'Kaohsiung'}
+        ]);
+
+        // you can see, we got four items unexpectedly
+        expect(ms.getSelection()).toMatchObject([
+            {id: 'Taipei'},
+            {id: 'Taichung'},
+            {id: 'Tainan'},
+            {id: 'Kaohsiung'}
+        ]);
+    });
+
 
     it('method sets the HTTP protocol method.', () => {
         document.body.innerHTML = `
