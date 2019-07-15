@@ -1057,5 +1057,43 @@ describe('Magic Suggest Configuration', () => {
         expect(ms.combobox.find('.ms-res-item').length).toBe(2);
     });
 
+    it('maxSelection sets the limit of items that can be selected.', () => {
+        document.body.innerHTML = `
+        <input id="city" />
+        `;
+        const ms = $('#city').magicSuggest({
+            maxSelection: 3
+        });
+
+        ms.addToSelection({id: 'Taipei'});
+        ms.addToSelection({id: 'Taichung'});
+        ms.addToSelection({id: 'Tainan'});
+        ms.addToSelection({id: 'Kaohsiung'});
+        expect(ms.getSelection()).toMatchObject([
+            {id: 'Taipei'},
+            {id: 'Taichung'},
+            {id: 'Tainan'}
+        ]);
+    });
+
+    it('method sets the HTTP protocol method.', () => {
+        document.body.innerHTML = `
+        <input id="city" />
+        `;
+        const ms = $('#city').magicSuggest({
+            data: 'api/get_city',
+            method: 'GET'
+        });
+
+        let expectedAjaxConfig = {};
+        $.ajax = jest.fn().mockImplementation((param) => {
+            expectedAjaxConfig = param;
+        });
+        //in order to trigger ajax call
+        ms.expand();
+
+        expect(expectedAjaxConfig.type).toEqual('GET');
+    });
+
 
 });
