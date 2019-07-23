@@ -1148,5 +1148,47 @@ describe('Magic Suggest Configuration', () => {
         expect(expectedAjaxConfig.type).toEqual('GET');
     });
 
+    it('minChars defines the minimum amount of characters before expanding the combo. When less than 2 characters, expand event should not be trigger', () => {
+        document.body.innerHTML = `
+        <input id="city" />
+        `;
+        const ms = $('#city').magicSuggest({
+            data: 'api/get_city',
+            minChars: 2
+        });
+
+        ms.input.val('b');
+
+        const mockFn = jest.fn();
+        $(ms).on('expand', () => {
+            mockFn();
+        });
+
+        ms.expand();
+        expect(mockFn).not.toHaveBeenCalled();
+
+    });
+
+    it('minChars defines the minimum amount of characters before expanding the combo. When more than 2 characters, expand event should be trigger', () => {
+        document.body.innerHTML = `
+        <input id="city" />
+        `;
+        const ms = $('#city').magicSuggest({
+            data: 'api/get_city',
+            minChars: 2
+        });
+
+        ms.input.val('Hello');
+
+        const mockFn = jest.fn();
+        $(ms).on('expand', () => {
+            mockFn();
+        });
+
+        ms.expand();
+        expect(mockFn).toHaveBeenCalled();
+
+    });
+
 
 });
