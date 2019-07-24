@@ -1190,5 +1190,28 @@ describe('Magic Suggest Configuration', () => {
 
     });
 
+    it('', () => {
+        document.body.innerHTML = `
+        <input id="city" />
+        `;
+
+        const mockFn = jest.fn();
+        const ms = $('#city').magicSuggest({
+            data: 'api/get_city',
+            minChars: 3,
+            minCharsRenderer: mockFn
+        });
+
+        ms.input.val('He');
+        $(ms.input).focus();
+        // $(ms).on('expand', () => {
+        //     mockFn();
+        // });
+        //
+        // ms.expand();
+        expect(mockFn).toHaveBeenCalled();
+
+    });
+
 
 });
