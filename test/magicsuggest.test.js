@@ -1190,7 +1190,7 @@ describe('Magic Suggest Configuration', () => {
 
     });
 
-    it('', () => {
+    it('minCharsRenderer sets the helper message for input that is too short.', () => {
         document.body.innerHTML = `
         <input id="city" />
         `;
@@ -1210,6 +1210,22 @@ describe('Magic Suggest Configuration', () => {
         //
         // ms.expand();
         expect(mockFn).toHaveBeenCalled();
+
+    });
+
+    it('name used in the current form.', () => {
+        document.body.innerHTML = `
+        <input id="city" />
+        `;
+
+        const ms = $('#city').magicSuggest({
+            data: 'api/get_city',
+            name: 'cities'
+        });
+
+        ms.addToSelection([{ id: 'Tainan'}, {id: 'Taipei'}])
+        let name = $('#city').find('input[type="hidden"]').attr('name');
+        expect(name).toBe('cities[]');
 
     });
 
