@@ -1259,5 +1259,22 @@ describe('Magic Suggest Configuration', () => {
         expect(ms.input.attr('placeholder')).toBe('Make a selection');
     });
 
+    it('queryParam defines the name of the parameter sent through ajax.', () => {
+        document.body.innerHTML = `
+        <input id="city" />
+        `;
+        const ms = $('#city').magicSuggest({
+            data: 'api/get_city',
+            queryParam: 'q',
+        });
+
+        $.ajax = jest.fn().mockImplementation(param => {
+        });
+
+        ms.input.val('Tainan');
+        ms.expand();
+        expect($.ajax).toHaveBeenCalledWith(expect.objectContaining({data: {q: 'Tainan'}}))
+    });
+
 
 });
