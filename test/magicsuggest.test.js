@@ -1223,10 +1223,28 @@ describe('Magic Suggest Configuration', () => {
             name: 'cities'
         });
 
-        ms.addToSelection([{ id: 'Tainan'}, {id: 'Taipei'}])
+        ms.addToSelection([{id: 'Tainan'}, {id: 'Taipei'}])
         let name = $('#city').find('input[type="hidden"]').attr('name');
         expect(name).toBe('cities[]');
 
+    });
+
+    it('noSuggestionText is the text displayed when no match is found.', () => {
+        document.body.innerHTML = `
+        <input id="city" />
+        `;
+        const ms = $('#city').magicSuggest({
+            data: ['Tainan', 'Taichung'],
+            noSuggestionText: 'No result matching the term {{query}}',
+        });
+
+        $.fn.html = jest.fn().mockImplementation(value => { });
+
+        ms.input.val('Taipei');
+
+        ms.expand();
+
+        expect($.fn.html).toHaveBeenCalledWith('No result matching the term Taipei');
     });
 
 
