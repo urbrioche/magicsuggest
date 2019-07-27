@@ -1238,13 +1238,25 @@ describe('Magic Suggest Configuration', () => {
             noSuggestionText: 'No result matching the term {{query}}',
         });
 
-        $.fn.html = jest.fn().mockImplementation(value => { });
+        $.fn.html = jest.fn().mockImplementation(value => {
+        });
 
         ms.input.val('Taipei');
 
         ms.expand();
 
         expect($.fn.html).toHaveBeenCalledWith('No result matching the term Taipei');
+    });
+
+    it('placeholder is the text displayed when the combo is empty.', () => {
+        document.body.innerHTML = `
+        <input id="city" />
+        `;
+        const ms = $('#city').magicSuggest({
+            data: ['Tainan', 'Taichung'],
+            placeholder: 'Make a selection',
+        });
+        expect(ms.input.attr('placeholder')).toBe('Make a selection');
     });
 
 
