@@ -1276,5 +1276,24 @@ describe('Magic Suggest Configuration', () => {
         expect($.ajax).toHaveBeenCalledWith(expect.objectContaining({data: {q: 'Tainan'}}))
     });
 
+    it('renderer will format the combo\'s results with custom HTML.', () => {
+        document.body.innerHTML = `
+        <input id="city" />
+        `;
+
+        let a = [];
+        let mockFn = jest.fn().mockImplementation(data => {
+            a.push(data);
+        });
+
+        const ms = $('#city').magicSuggest({
+            data: ['Taipei', 'Taichung', 'Kaohsiung'],
+            renderer: mockFn
+        });
+        expect(mockFn).toHaveBeenNthCalledWith(1, { id: 'Taipei', name: 'Taipei'});
+        expect(mockFn).toHaveBeenNthCalledWith(2, { id: 'Taichung', name: 'Taichung'});
+        expect(mockFn).toHaveBeenNthCalledWith(3, { id: 'Kaohsiung', name: 'Kaohsiung'});
+    });
+
 
 });
