@@ -1281,18 +1281,31 @@ describe('Magic Suggest Configuration', () => {
         <input id="city" />
         `;
 
-        let a = [];
         let mockFn = jest.fn().mockImplementation(data => {
-            a.push(data);
         });
 
         const ms = $('#city').magicSuggest({
             data: ['Taipei', 'Taichung', 'Kaohsiung'],
             renderer: mockFn
         });
-        expect(mockFn).toHaveBeenNthCalledWith(1, { id: 'Taipei', name: 'Taipei'});
-        expect(mockFn).toHaveBeenNthCalledWith(2, { id: 'Taichung', name: 'Taichung'});
-        expect(mockFn).toHaveBeenNthCalledWith(3, { id: 'Kaohsiung', name: 'Kaohsiung'});
+        expect(mockFn).toHaveBeenNthCalledWith(1, {id: 'Taipei', name: 'Taipei'});
+        expect(mockFn).toHaveBeenNthCalledWith(2, {id: 'Taichung', name: 'Taichung'});
+        expect(mockFn).toHaveBeenNthCalledWith(3, {id: 'Kaohsiung', name: 'Kaohsiung'});
+    });
+
+    it('required ensures that at least one selection has been made.', () => {
+        document.body.innerHTML = `
+        <input id="city" />
+        `;
+
+        const ms = $('#city').magicSuggest({
+            required: true
+        });
+
+        // no items were selected
+        expect(ms.getSelection().length).toBe(0);
+        // isValid method will check 'required' in cfg and return false if no items were selected
+        expect(ms.isValid()).toBeFalsy();
     });
 
 
