@@ -645,6 +645,15 @@ describe('Magic Suggest Event', () => {
 });
 
 describe('Magic Suggest Configuration', () => {
+    let fnHtml;
+    beforeAll(()=>{
+        fnHtml = $.fn.html;
+    });
+
+    beforeEach(()=>{
+        $.fn.html = fnHtml;
+    });
+
     it('allowFreeEntries set as true will allow the user to enter non-suggested entries.', () => {
         document.body.innerHTML = `
         <input id="city" />
@@ -1306,6 +1315,21 @@ describe('Magic Suggest Configuration', () => {
         expect(ms.getSelection().length).toBe(0);
         // isValid method will check 'required' in cfg and return false if no items were selected
         expect(ms.isValid()).toBeFalsy();
+    });
+
+    it('resultAsString displays the selection as delimited string.', () => {
+        document.body.innerHTML = `
+        <input id="city" />
+        `;
+
+        const ms = $('#city').magicSuggest({
+            resultAsString: true,
+            resultAsStringDelimiter: '; ',
+        });
+        ms.addToSelection([{id: 'Tainan', name: 'Tainan'}, {id: 'Taichung', name: 'Taichung'}]);
+        ms.container.trigger('blur');
+        const actual = $('#city .ms-sel-text').text();
+        expect(actual).toBe('Tainan; Taichung');
     });
 
 
