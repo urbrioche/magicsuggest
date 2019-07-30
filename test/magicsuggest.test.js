@@ -1346,5 +1346,32 @@ describe('Magic Suggest Configuration', () => {
         expect(actual).toBe('Tainan; Taichung');
     });
 
+    it('resultsField specifies the JSON property that contains the suggestions data.', () => {
+        document.body.innerHTML = `
+        <input id="city" />
+        `;
+
+        const ms = $('#city').magicSuggest({
+            resultsField: 'cities',
+            data: {
+                "total": 3,
+                cities:[
+                    {id: 1, country: 'Taiwan', city: 'Taipei'},
+                    {id: 2, country: 'Taiwan', city: 'Tainan'},
+                    {id: 3, country: 'United States', city: 'New York'},
+                    {id: 4, country: 'United States', city: 'Los Angeles'},
+                ],
+            },
+        });
+
+        const actual = ms.getData();
+        expect(actual).toMatchObject([
+            {id: 1, country: 'Taiwan', city: 'Taipei'},
+            {id: 2, country: 'Taiwan', city: 'Tainan'},
+            {id: 3, country: 'United States', city: 'New York'},
+            {id: 4, country: 'United States', city: 'Los Angeles'},
+        ]);
+    });
+
 
 });
