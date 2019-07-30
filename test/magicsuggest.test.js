@@ -646,11 +646,11 @@ describe('Magic Suggest Event', () => {
 
 describe('Magic Suggest Configuration', () => {
     let fnHtml;
-    beforeAll(()=>{
+    beforeAll(() => {
         fnHtml = $.fn.html;
     });
 
-    beforeEach(()=>{
+    beforeEach(() => {
         $.fn.html = fnHtml;
     });
 
@@ -1318,6 +1318,20 @@ describe('Magic Suggest Configuration', () => {
     });
 
     it('resultAsString displays the selection as delimited string.', () => {
+        document.body.innerHTML = `
+        <input id="city" />
+        `;
+
+        const ms = $('#city').magicSuggest({
+            resultAsString: true,
+        });
+        ms.addToSelection([{id: 'Tainan', name: 'Tainan'}, {id: 'Taichung', name: 'Taichung'}]);
+        ms.container.trigger('blur');
+        const actual = $('#city .ms-sel-text').text();
+        expect(actual).toBe('Tainan,Taichung');
+    });
+
+    it('resultAsStringDelimiter specifies how the string will be delimited.', () => {
         document.body.innerHTML = `
         <input id="city" />
         `;
