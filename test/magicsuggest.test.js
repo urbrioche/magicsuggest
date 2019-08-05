@@ -1352,7 +1352,7 @@ describe('Magic Suggest Configuration', () => {
             resultsField: 'cities',
             data: {
                 "total": 3,
-                cities:[
+                cities: [
                     {id: 1, country: 'Taiwan', city: 'Taipei'},
                     {id: 2, country: 'Taiwan', city: 'Tainan'},
                     {id: 3, country: 'United States', city: 'New York'},
@@ -1368,6 +1368,32 @@ describe('Magic Suggest Configuration', () => {
             {id: 3, country: 'United States', city: 'New York'},
             {id: 4, country: 'United States', city: 'Los Angeles'},
         ]);
+    });
+
+    it('selectFirst auto places the cursor on the first item.', () => {
+        document.body.innerHTML = `
+        <input id="city" />
+        `;
+
+        const ms = $('#city').magicSuggest({
+            resultsField: 'cities',
+            selectFirst: true,
+            data: {
+                "total": 3,
+                cities: [
+                    {id: 1, name: 'Taiwan', city: 'Taipei'},
+                    {id: 2, name: 'Taiwan', city: 'Tainan'},
+                    {id: 3, name: 'United States', city: 'New York'},
+                    {id: 4, name: 'United States', city: 'Los Angeles'},
+                ],
+            },
+        });
+
+        ms.input.val('U');
+        ms.expand();
+
+        const actual = ms.combobox.find('.ms-res-item-active').text();
+        expect(actual).toBe('United States');
     });
 
 
