@@ -645,13 +645,13 @@ describe('Magic Suggest Event', () => {
 });
 
 describe('Magic Suggest Configuration', () => {
-    let fnHtml;
+
+    let spyJqHtml;
     beforeAll(() => {
-        fnHtml = $.fn.html;
+        spyJqHtml = jest.spyOn($.fn, 'html');
     });
 
     beforeEach(() => {
-        $.fn.html = fnHtml;
     });
 
     it('allowFreeEntries set as true will allow the user to enter non-suggested entries.', () => {
@@ -1247,14 +1247,11 @@ describe('Magic Suggest Configuration', () => {
             noSuggestionText: 'No result matching the term {{query}}',
         });
 
-        $.fn.html = jest.fn().mockImplementation(value => {
-        });
-
         ms.input.val('Taipei');
 
         ms.expand();
 
-        expect($.fn.html).toHaveBeenCalledWith('No result matching the term Taipei');
+        expect(spyJqHtml).toHaveBeenCalledWith('No result matching the term Taipei');
     });
 
     it('placeholder is the text displayed when the combo is empty.', () => {
