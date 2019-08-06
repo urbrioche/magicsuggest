@@ -1396,5 +1396,20 @@ describe('Magic Suggest Configuration', () => {
         expect(actual).toBe('United States');
     });
 
+    it('selectionCls modifies the way selections look.', () => {
+        document.body.innerHTML = `
+        <input id="city" />
+        `;
+
+        const ms = $('#city').magicSuggest({
+            selectionCls: 'custom',
+        });
+
+        ms.addToSelection([{id: 'Tainan', name: 'Tainan'}, {id: 'Taichung', name: 'Taichung'}]);
+
+        const actual = $('#city').find('.ms-sel-item').hasClass('custom');
+        expect(actual).toBeTruthy();
+    });
+
 
 });
