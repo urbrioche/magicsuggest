@@ -1411,5 +1411,18 @@ describe('Magic Suggest Configuration', () => {
         expect(actual).toBeTruthy();
     });
 
+    it('selectionContainer specifies where the results are rendered', () => {
+        document.body.innerHTML = `
+        <div id="custom-ctn"></div>
+        <input id="city" />
+        `;
+
+        const ms = $('#city').magicSuggest({
+            selectionContainer: $('#custom-ctn'),
+        });
+        const actual = ms.selectionContainer;
+        expect(actual).toEqual($('#custom-ctn'));
+    });
+
 
 });
