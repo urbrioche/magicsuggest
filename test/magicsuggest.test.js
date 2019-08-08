@@ -647,8 +647,10 @@ describe('Magic Suggest Event', () => {
 describe('Magic Suggest Configuration', () => {
 
     let spyJqHtml;
+    let spyJqInsertAfter;
     beforeAll(() => {
         spyJqHtml = jest.spyOn($.fn, 'html');
+        spyJqInsertAfter = jest.spyOn($.fn, 'insertAfter');
     });
 
     beforeEach(() => {
@@ -1422,6 +1424,31 @@ describe('Magic Suggest Configuration', () => {
         });
         const actual = ms.selectionContainer;
         expect(actual).toEqual($('#custom-ctn'));
+    });
+
+
+    it('selectionPosition defines where the selected items should be rendered.-> bottom', () => {
+        document.body.innerHTML = `
+        <div id="custom-ctn"></div>
+        <input id="city" />
+        `;
+        const ms = $('#city').magicSuggest({
+            selectionPosition: 'bottom',
+        });
+
+        expect(spyJqInsertAfter).toHaveBeenCalledWith(ms.container);
+    });
+
+    it('selectionPosition defines where the selected items should be rendered.-> right', () => {
+        document.body.innerHTML = `
+        <div id="custom-ctn"></div>
+        <input id="city" />
+        `;
+        const ms = $('#city').magicSuggest({
+            selectionPosition: 'right',
+        });
+
+        expect(spyJqInsertAfter).toHaveBeenCalledWith(ms.container);
     });
 
 
