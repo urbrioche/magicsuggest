@@ -648,9 +648,11 @@ describe('Magic Suggest Configuration', () => {
 
     let spyJqHtml;
     let spyJqInsertAfter;
+    let spyJqAddClass;
     beforeAll(() => {
         spyJqHtml = jest.spyOn($.fn, 'html');
         spyJqInsertAfter = jest.spyOn($.fn, 'insertAfter');
+        spyJqAddClass = jest.spyOn($.fn, 'addClass');
     });
 
     beforeEach(() => {
@@ -1449,6 +1451,35 @@ describe('Magic Suggest Configuration', () => {
         });
 
         expect(spyJqInsertAfter).toHaveBeenCalledWith(ms.container);
+    });
+
+    it('selectionRenderer defines how the selected items should be displayed.', () => {
+        document.body.innerHTML = `
+        <input id="city" />
+        `;
+
+        let mockFn = jest.fn().mockImplementation(data => {
+        });
+
+        const ms = $('#city').magicSuggest({
+            selectionRenderer: mockFn
+        });
+        ms.addToSelection([{id: 'Tainan', name: 'Tainan'}, {id: 'Taichung', name: 'Taichung'}]);
+        expect(mockFn).toHaveBeenCalledTimes(2);
+    });
+
+    it('selectionStacked will stack the selection vertically.', () => {
+        document.body.innerHTML = `
+        <input id="city" />
+        `;
+
+        const ms = $('#city').magicSuggest({
+            selectionStacked: true,
+            selectionPosition: 'bottom',
+            data: 'api/get_city',
+        });
+
+        expect(spyJqAddClass).toHaveBeenCalledWith('ms-stacked');
     });
 
 
