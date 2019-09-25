@@ -1482,5 +1482,57 @@ describe('Magic Suggest Configuration', () => {
         expect(spyJqAddClass).toHaveBeenCalledWith('ms-stacked');
     });
 
+    it('sortDir sorts data in a given direction.', () => {
+        document.body.innerHTML = `
+        <input id="city" />
+        `;
+
+        const ms = $('#city').magicSuggest({
+            sortDir: 'desc',
+            sortOrder: 'id',
+            data: [
+                {id: 1, country: 'Taiwan', city: 'Taipei'},
+                {id: 2, country: 'Taiwan', city: 'Tainan'},
+                {id: 3, country: 'United States', city: 'New York'},
+                {id: 4, country: 'United States', city: 'Los Angeles'},
+            ],
+        });
+        ms.expand();
+        const actual = ms.combobox.find('.ms-res-item').get().map(e => $(e).data('json'));
+        const expected = [
+            {id: 4, country: 'United States', city: 'Los Angeles'},
+            {id: 3, country: 'United States', city: 'New York'},
+            {id: 2, country: 'Taiwan', city: 'Tainan'},
+            {id: 1, country: 'Taiwan', city: 'Taipei'},
+        ];
+        expect(actual).toEqual(expected);
+    });
+
+    it('sortOrder sorts data according to a given property field.', () => {
+        document.body.innerHTML = `
+        <input id="city" />
+        `;
+
+        const ms = $('#city').magicSuggest({
+            sortDir: 'asc',
+            sortOrder: 'city',
+            data: [
+                {id: 2, country: 'Taiwan', city: 'Tainan'},
+                {id: 3, country: 'United States', city: 'New York'},
+                {id: 1, country: 'Taiwan', city: 'Taipei'},
+                {id: 4, country: 'United States', city: 'Los Angeles'},
+            ],
+        });
+        ms.expand();
+        const actual = ms.combobox.find('.ms-res-item').get().map(e => $(e).data('json'));
+        const expected = [
+            {id: 4, country: 'United States', city: 'Los Angeles'},
+            {id: 3, country: 'United States', city: 'New York'},
+            {id: 2, country: 'Taiwan', city: 'Tainan'},
+            {id: 1, country: 'Taiwan', city: 'Taipei'},
+        ];
+        expect(actual).toEqual(expected);
+    });
+
 
 });
