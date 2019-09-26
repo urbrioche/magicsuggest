@@ -1534,5 +1534,52 @@ describe('Magic Suggest Configuration', () => {
         expect(actual).toEqual(expected);
     });
 
+    it('strictSuggest filters out entries that do not start with the given input.', () => {
+        document.body.innerHTML = `
+        <input id="ms-strictSuggest" />
+        `;
+
+        const ms = $('#ms-strictSuggest').magicSuggest({
+            strictSuggest: true,
+            data: ['Henry Ford', 'Thierry Henry', 'Harrison Ford']
+        });
+        ms.input.val('Henry');
+        ms.expand();
+        const actual = ms.combobox.find('.ms-res-item').get().map(e => $(e).data('json').name);
+        const expected = [
+            'Henry Ford'
+        ];
+        expect(actual).toEqual(expected);
+    });
+
+    it('style adds inline CSS to the component\'s container.', () => {
+
+        document.body.innerHTML = `
+        <input id="ms-style" />
+        `;
+        const style = "border-radius: 0 !important";
+        const ms = $('#ms-style').magicSuggest({
+            style: style,
+            data: ['Paris', 'New York', 'Gotham']
+        });
+        expect(ms.container.attr('style')).toEqual(style);
+    });
+
+    it('toggleOnClick expands the component when clicked upon.', () => {
+        document.body.innerHTML = `
+        <input id="ms-toggleOnClick" />
+        `;
+        const ms = $('#ms-toggleOnClick').magicSuggest({
+            toggleOnClick: true,
+            data: ['Paris', 'New York', 'Gotham']
+        });
+        let mockFn = jest.fn().mockImplementation(data => {
+        });
+        ms.expand = mockFn;
+        ms.input.trigger('focus');
+        ms.input.trigger('click');
+        expect(mockFn).toHaveBeenCalled();
+    });
+
 
 });
