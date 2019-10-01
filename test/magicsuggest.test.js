@@ -1581,5 +1581,19 @@ describe('Magic Suggest Configuration', () => {
         expect(mockFn).toHaveBeenCalled();
     });
 
+    it('useZebraStyle renders odd lines with more shades of grey.', () => {
+        document.body.innerHTML = `
+        <input id="ms-useZebraStyle" />
+        `;
+        const ms = $('#ms-useZebraStyle').magicSuggest({
+            useZebraStyle: true,
+            data: ['Paris', 'New York', 'Gotham']
+        });
+        ms.expand();
+        const actual = ms.combobox.find('.ms-res-odd').get().map(e=>$(e).data('json').name);
+        //index is from 0
+        expect(actual).toEqual(['New York']);
+    });
+
 
 });
