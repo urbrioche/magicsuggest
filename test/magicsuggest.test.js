@@ -1590,9 +1590,47 @@ describe('Magic Suggest Configuration', () => {
             data: ['Paris', 'New York', 'Gotham']
         });
         ms.expand();
-        const actual = ms.combobox.find('.ms-res-odd').get().map(e=>$(e).data('json').name);
+        const actual = ms.combobox.find('.ms-res-odd').get().map(e => $(e).data('json').name);
         //index is from 0
         expect(actual).toEqual(['New York']);
+    });
+
+    it('value sets an initial value.', () => {
+        document.body.innerHTML = `
+        <input id="ms-value" />
+        `;
+        const ms = $('#ms-value').magicSuggest({
+            value: [2, 3],
+            data: [
+                {id: 2, name: 'Taiwan', city: 'Tainan'},
+                {id: 3, name: 'United States', city: 'New York'},
+                {id: 1, name: 'Taiwan', city: 'Taipei'},
+                {id: 4, name: 'United States', city: 'Los Angeles'},
+            ]
+        });
+        const actual = ms.getSelection();
+        expect(actual).toEqual([{ id: 2, name: 'Taiwan', city: 'Tainan' },
+            { id: 3, name: 'United States', city: 'New York'}]);
+
+    });
+
+    it('valueField specifies the JSON property to be used for value.', () => {
+        document.body.innerHTML = `
+        <input id="ms-value" />
+        `;
+        const ms = $('#ms-value').magicSuggest({
+            value: ['Taiwan', 'United States'],
+            valueField: 'name',
+            data: [
+                {id: 2, name: 'Taiwan', city: 'Tainan'},
+                {id: 3, name: 'United States', city: 'New York'},
+                {id: 1, name: 'Taiwan', city: 'Taipei'},
+                {id: 4, name: 'United States', city: 'Los Angeles'},
+            ]
+        });
+        const actual = ms.getSelection();
+        expect(actual).toEqual([{id: 2, name: 'Taiwan', city: 'Tainan'},
+            { id: 3, name: 'United States', city: 'New York' }]);
     });
 
 
